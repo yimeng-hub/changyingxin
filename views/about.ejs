@@ -1,0 +1,33 @@
+<%- include('partials/head', { pageTitle: (lang === 'en' ? settings.siteNameEn + ' | About' : settings.siteName + ' | 关于我们'), pageDesc: (lang === 'en' ? settings.seoDescriptionEn : settings.seoDescription) }) %>
+<body>
+<%- include('partials/header') %>
+<main class="container section">
+  <div class="section-head"><h2><%= t.about %></h2></div>
+  <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:32px;line-height:1.9;">
+    <h3 style="margin-top:0;"><%= lang === 'en' ? settings.siteNameEn : settings.siteName %></h3>
+    <p style="color:#555;font-size:15px;line-height:1.95;"><%= lang === 'en' ? settings.aboutTextEn : settings.aboutText %></p>
+    <h4 style="margin-top:24px;">业务范畴 / Business Scope</h4>
+    <ul style="color:#555;">
+      <li><%= lang === 'en' ? 'Technical services, development, consulting, exchange, transfer & promotion' : '技术服务、技术开发、技术咨询、技术交流、技术转让、技术推广' %></li>
+      <li><%= lang === 'en' ? 'Electronic components retail' : '电子元器件零售' %></li>
+      <li><%= lang === 'en' ? 'Industrial automation & control systems' : '工业自动控制系统装置销售' %></li>
+      <li><%= lang === 'en' ? 'Industrial control computers & systems' : '工业控制计算机及系统销售' %></li>
+      <li><%= lang === 'en' ? 'Industrial robots & machinery' : '工业机器人销售、机械设备销售' %></li>
+      <li><%= lang === 'en' ? 'Instruments, fluid & sealing components' : '仪器仪表销售、液气密元件及系统销售' %></li>
+      <li><%= lang === 'en' ? 'Electronics, software, pneumatic & hydraulic machinery' : '电子产品、软件销售，气压/液压动力机械及元件销售' %></li>
+    </ul>
+    <h4 style="margin-top:24px;">代理品牌 / Brands We Distribute</h4>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <% brands.forEach(function(b){ %>
+        <span style="display:inline-flex;align-items:center;padding:6px 12px;border:1px solid <%= b.color %>40;background:<%= b.color %>14;color:<%= b.color %>;border-radius:999px;font-weight:600;font-size:13px;"><%= b.code %></span>
+      <% }) %>
+    </div>
+    <h4 style="margin-top:24px;"><%= t.contactInfo %></h4>
+    <p style="color:#555;">✉️ <%= settings.contactEmail %> &nbsp; 📞 <%= settings.contactPhone %></p>
+    <p style="color:#555;">📍 <%= lang === 'en' ? settings.addressEn : settings.address %></p>
+  </div>
+</main>
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

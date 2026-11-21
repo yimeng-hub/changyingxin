@@ -1,0 +1,229 @@
+<%- include('partials/head') %>
+<body>
+<%- include('partials/header') %>
+
+<main>
+  <!-- 轮播图 + 首屏价值主张 -->
+  <section class="hero container">
+    <div class="carousel" id="carousel">
+      <div class="carousel-track" id="carouselTrack">
+        <% slides.forEach(function(s){ %>
+          <a class="slide" href="<%= s.link %>"
+             data-title="<%= s.title %>" data-title-en="<%= s.titleEn %>"
+             data-sub="<%= s.subtitle %>" data-sub-en="<%= s.subtitleEn %>">
+            <img src="<%= s.image %>" alt="<%= lang === 'en' ? s.titleEn : s.title %>" />
+          </a>
+        <% }) %>
+      </div>
+      <div class="hero-caption">
+        <h1 id="heroTitle"><%= lang === 'en' ? slides[0].titleEn : slides[0].title %></h1>
+        <p id="heroSub"><%= lang === 'en' ? slides[0].subtitleEn : slides[0].subtitle %></p>
+        <div class="hero-cta">
+          <button class="btn-primary" onclick="gotoContact()"><%= lang === 'en' ? 'Get a Quote' : '立即询价' %></button>
+          <a class="btn-ghost" href="#categories"><%= lang === 'en' ? 'Browse Categories' : '浏览分类' %></a>
+        </div>
+      </div>
+      <% if (slides.length > 1) { %>
+      <button class="carousel-arrow prev" onclick="moveSlide(-1)">‹</button>
+      <button class="carousel-arrow next" onclick="moveSlide(1)">›</button>
+      <div class="carousel-dots" id="carouselDots">
+        <% slides.forEach(function(s, i){ %>
+          <button class="<%= i === 0 ? 'active' : '' %>" onclick="goSlide(<%= i %>)"></button>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- 信任栏 -->
+    <div class="trust-bar">
+      <div class="trust-item"><span class="ti-ico">🛡️</span><div><b><%= lang === 'en' ? 'Authorized & Genuine' : '授权代理 · 正品保障' %></b><small><%= lang === 'en' ? '100% original brands' : '原装正品 假一赔十' %></small></div></div>
+      <div class="trust-item"><span class="ti-ico">🌐</span><div><b><%= lang === 'en' ? 'Worldwide Shipping' : '全球物流 · 直发到港' %></b><small><%= lang === 'en' ? 'Door-to-port delivery' : '门到港 全程跟踪' %></small></div></div>
+      <div class="trust-item"><span class="ti-ico">🛠️</span><div><b><%= lang === 'en' ? 'Engineering Support' : '技术选型 · 工程支持' %></b><small><%= lang === 'en' ? 'Selection & integration' : '选型咨询 系统集成' %></small></div></div>
+      <div class="trust-item"><span class="ti-ico">📦</span><div><b><%= lang === 'en' ? 'In-Stock · Fast Delivery' : '现货库存 · 快速交付' %></b><small><%= lang === 'en' ? '7-day dispatch' : '常用型号 7 天发货' %></small></div></div>
+    </div>
+  </section>
+
+  <!-- 热门商品 -->
+  <section class="section container" id="hot">
+    <div class="section-head">
+      <h2><%= t.hotProducts %></h2>
+      <span class="sub"><%= t.hotProductsSub %></span>
+    </div>
+
+    <!-- 二级筛选：产品类型 -->
+    <div class="type-chips" id="typeChips">
+      <button class="chip active" data-cat="" onclick="filterByCategory('', this)"><%= t.allTypes %></button>
+      <% categories.forEach(function(c){ %>
+        <button class="chip" data-cat="<%= c.id %>" onclick="filterByCategory('<%= c.id %>', this)"><%= lang === 'en' ? c.nameEn : c.name %></button>
+      <% }) %>
+    </div>
+
+    <div class="product-grid" id="productGrid">
+      <% products.forEach(function(p){ %>
+        <div class="product-card" data-cat="<%= p.categoryId %>" data-brand="<%= p.brandId || '' %>" data-search="<%=(p.name+' '+(p.nameEn||'')+' '+(p.sku||'')).toLowerCase() %>">
+          <div class="thumb">
+            <img src="<%= p.image %>" alt="<%= lang === 'en' ? p.nameEn : p.name %>" loading="lazy" />
+            <% if (p.tags && p.tags.includes('hot')) { %><span class="badge hot">HOT</span>
+            <% } else if (p.tags && p.tags.includes('new')) { %><span class="badge new">NEW</span>
+            <% } else if (p.tags && p.tags.includes('featured')) { %><span class="badge"><%= t.featured %></span><% } %>
+          </div>
+          <div class="body">
+            <div class="pname"><%= lang === 'en' ? p.nameEn : p.name %></div>
+            <div class="meta">
+              <span class="stars"><%= '★'.repeat(Math.round(p.rating)) %><%= '☆'.repeat(5-Math.round(p.rating)) %></span>
+              <span><%= p.rating %> · <%= p.reviews %> <%= t.reviews %></span>
+            </div>
+            <% if (p.price > 0) { %>
+              <div class="price-row">
+                <span class="price"><span class="cur"><%= settings.currencySymbol %></span><%= p.price %></span>
+                <% if (p.originalPrice > p.price) { %><span class="price-old"><%= settings.currencySymbol %><%= p.originalPrice %></span><% } %>
+              </div>
+              <button class="inquire-btn" onclick="openInquiry('<%= (lang==='en'?p.nameEn:p.name).replace(/'/g,"") %>')"><%= t.addToCart %></button>
+            <% } else { %>
+              <div class="price-row"><span class="price"><%= lang === 'en' ? 'Inquire' : '询价' %></span></div>
+              <button class="inquire-btn inquire-only" onclick="openInquiry('<%= (lang==='en'?p.nameEn:p.name).replace(/'/g,"") %>')"><%= t.inquire %></button>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <p id="noResult" style="display:none;text-align:center;color:#888;padding:30px;"><%= t.noResult %></p>
+  </section>
+
+  <!-- 新产品（后台可手动指定，未指定时自动推荐最新上架） -->
+  <section class="section container" id="new" style="padding-top:0;">
+    <div class="section-head">
+      <h2><%= t.newProducts %></h2>
+      <span class="sub"><%= t.newProductsSub %></span>
+    </div>
+    <div class="product-grid">
+      <% newProducts.forEach(function(p){ %>
+        <div class="product-card" data-cat="<%= p.categoryId %>" data-brand="<%= p.brandId || '' %>" data-search="<%=(p.name+' '+(p.nameEn||'')+' '+(p.sku||'')).toLowerCase() %>">
+          <div class="thumb">
+            <img src="<%= p.image %>" alt="<%= lang === 'en' ? p.nameEn : p.name %>" loading="lazy" />
+            <span class="badge new">NEW</span>
+          </div>
+          <div class="body">
+            <div class="pname"><%= lang === 'en' ? p.nameEn : p.name %></div>
+            <div class="meta">
+              <span class="stars"><%= '★'.repeat(Math.round(p.rating)) %><%= '☆'.repeat(5-Math.round(p.rating)) %></span>
+              <span><%= p.rating %> · <%= p.reviews %> <%= t.reviews %></span>
+            </div>
+            <% if (p.price > 0) { %>
+              <div class="price-row">
+                <span class="price"><span class="cur"><%= settings.currencySymbol %></span><%= p.price %></span>
+                <% if (p.originalPrice > p.price) { %><span class="price-old"><%= settings.currencySymbol %><%= p.originalPrice %></span><% } %>
+              </div>
+              <button class="inquire-btn" onclick="openInquiry('<%= (lang==='en'?p.nameEn:p.name).replace(/'/g,"") %>')"><%= t.addToCart %></button>
+            <% } else { %>
+              <div class="price-row"><span class="price"><%= lang === 'en' ? 'Inquire' : '询价' %></span></div>
+              <button class="inquire-btn inquire-only" onclick="openInquiry('<%= (lang==='en'?p.nameEn:p.name).replace(/'/g,"") %>')"><%= t.inquire %></button>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <!-- 促销活动 -->
+  <section class="section container" id="promo" style="background:#fff;">
+    <div class="section-head">
+      <h2><%= t.promoTitle %></h2>
+      <span class="sub"><%= t.promoSub %></span>
+    </div>
+    <div class="promo-grid">
+      <% promotions.forEach(function(pr){ %>
+        <a class="promo-card" href="<%= pr.link %>">
+          <img src="<%= pr.image %>" alt="<%= lang === 'en' ? pr.titleEn : pr.title %>" loading="lazy" />
+          <span class="tag"><%= pr.discountText %></span>
+        </a>
+      <% }) %>
+    </div>
+  </section>
+
+  <!-- 联系 / 留言 -->
+  <section class="section container" id="contact">
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <h3><%= t.contactUs %></h3>
+        <p><%= t.contactSub %></p>
+        <p>✉️ <%= settings.contactEmail %></p>
+        <p>📞 <%= settings.contactPhone %></p>
+        <p>📍 <%= lang === 'en' ? settings.addressEn : settings.address %></p>
+      </div>
+      <form class="contact-form" id="contactForm" onsubmit="return submitMessage(event)">
+        <div class="form-row">
+          <label><%= t.name %> *</label>
+          <input type="text" id="m_name" required />
+        </div>
+        <div class="form-row">
+          <label><%= t.email %> *</label>
+          <input type="email" id="m_email" required />
+        </div>
+        <div class="form-row">
+          <label><%= t.phone %></label>
+          <input type="text" id="m_phone" />
+        </div>
+        <div class="form-row">
+          <label><%= t.subject %></label>
+          <input type="text" id="m_subject" />
+        </div>
+        <div class="form-row">
+          <label><%= t.message %> *</label>
+          <textarea id="m_content" required></textarea>
+        </div>
+        <button class="submit-btn" type="submit" id="m_submit"><%= t.send %></button>
+        <div class="form-msg" id="formMsg"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 产品分类（全站分类入口，置于页面底部） -->
+  <section class="section container" id="categories">
+    <div class="section-head">
+      <h2><%= t.categories %></h2>
+      <span class="sub"><%= t.categoriesSub %></span>
+    </div>
+    <div class="cat-grid">
+      <% categories.forEach(function(c){ %>
+        <div class="cat-card" data-cat="<%= c.id %>" onclick="filterByCategory('<%= c.id %>', this)">
+          <div class="ico"><%= c.icon %></div>
+          <div class="nm"><%= lang === 'en' ? c.nameEn : c.name %></div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
+
+<!-- 登录弹窗 -->
+<div class="modal-mask" id="loginMask" onclick="if(event.target===this)closeLogin()">
+  <div class="modal">
+    <h3><%= t.login %> · <%= settings.shortName %></h3>
+    <form onsubmit="return doLogin(event)">
+      <div class="form-row"><label>Username</label><input type="text" id="l_user" required /></div>
+      <div class="form-row"><label>Password</label><input type="password" id="l_pass" required /></div>
+      <button class="submit-btn" type="submit"><%= t.login %></button>
+      <p id="loginErr" style="color:#d33;font-size:13px;margin-top:10px;display:none;"></p>
+    </form>
+    <div class="modal-actions"><button class="link-btn" onclick="closeLogin()">✕</button></div>
+  </div>
+</div>
+
+<!-- 结构化数据：商品列表（SEO 富摘要） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": [
+    <% products.slice(0, 20).forEach(function(p, i){ %>
+    { "@type": "ListItem", "position": <%= i+1 %>, "item": { "@type": "Product", "name": "<%= (lang==='en'?p.nameEn:p.name).replace(/"/g,'') %>", "image": "<%= p.image %>", "offers": { "@type": "Offer", "price": "<%= p.price %>", "priceCurrency": "<%= settings.currency %>" } } }<%= i < Math.min(products.length,20)-1 ? ',' : '' %>
+    <% }) %>
+  ]
+}
+</script>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

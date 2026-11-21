@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>后台管理 · 长盈鑫科技</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <div class="admin-top">
+    <div>后台管理 · <b>北京长盈鑫科技</b></div>
+    <div>
+      欢迎 <b><%= admin.username %></b>
+      <a href="/?lang=zh" target="_blank">访问前台 ↗</a>
+      <a href="#" onclick="logout()">退出</a>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <aside class="admin-side" id="side">
+      <button data-tab="overview" class="active">概览</button>
+      <button data-tab="slides">轮播图</button>
+      <button data-tab="brands">品牌管理</button>
+      <button data-tab="categories">产品类型</button>
+      <button data-tab="products">商品管理</button>
+      <button data-tab="promotions">促销活动</button>
+      <button data-tab="messages">留言管理</button>
+      <button data-tab="settings">站点设置</button>
+      <button data-tab="password">修改密码</button>
+    </aside>
+    <section class="admin-main" id="main"></section>
+  </div>
+
+  <div class="admin-modal" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="box" id="modalBox"></div>
+  </div>
+
+  <script>window.__admin = '<%= admin.username %>';</script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

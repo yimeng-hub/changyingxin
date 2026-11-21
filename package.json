@@ -1,0 +1,24 @@
+{
+  "name": "changyingxin-ecommerce",
+  "version": "1.0.0",
+  "description": "北京长盈鑫科技有限公司 - 国际贸易电商网站（全栈：SSR 首页 + 后台内容管理 + 云就绪数据/存储层）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node src/seed.js",
+    "gen-placeholders": "node src/gen-placeholders.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cos-nodejs-sdk-v5": "^3.0.0",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "multer": "^2.0.1",
+    "pg": "^8.23.1"
+  }
+}

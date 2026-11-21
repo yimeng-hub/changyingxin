@@ -1,0 +1,33 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-cols">
+      <div>
+        <h4><%= lang === 'en' ? settings.siteNameEn : settings.siteName %></h4>
+        <p style="font-size:14px;line-height:1.7;"><%= lang === 'en' ? settings.sloganEn : settings.slogan %></p>
+        <p style="font-size:13px;color:#9aa0ad;"><%= lang === 'en' ? settings.footerAbout || '' : settings.footerAbout || '' %></p>
+      </div>
+      <div>
+        <h4><%= t.quickLinks %></h4>
+        <a href="/?lang=<%= lang %>"><%= t.home %></a>
+        <a href="#categories"><%= t.categories %></a>
+        <a href="#promo"><%= t.promotions %></a>
+        <a href="/about?lang=<%= lang %>"><%= t.about %></a>
+      </div>
+      <div>
+        <h4><%= t.service %></h4>
+        <a href="#contact"><%= t.contactUs %></a>
+        <a href="#hot"><%= t.hotProducts %></a>
+        <a href="/admin"><%= lang === 'en' ? 'Admin' : '后台管理' %></a>
+      </div>
+      <div>
+        <h4><%= t.contactInfo %></h4>
+        <p style="font-size:14px;margin:6px 0;">✉️ <%= settings.contactEmail %></p>
+        <p style="font-size:14px;margin:6px 0;">📞 <%= settings.contactPhone %></p>
+        <p style="font-size:14px;margin:6px 0;">📍 <%= lang === 'en' ? settings.addressEn : settings.address %></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © <%= new Date().getFullYear() %> <%= settings.siteNameEn %>. <%= t.rights %>.
+    </div>
+  </div>
+</footer>

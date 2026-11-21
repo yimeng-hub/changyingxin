@@ -1,0 +1,39 @@
+<header class="site-header">
+  <div class="container">
+    <div class="header-top">
+      <a class="logo" href="/?lang=<%= lang %>">
+        <div class="mark"><%= settings.logoText %></div>
+        <div class="name"><%= lang === 'en' ? settings.shortNameEn : settings.shortName %><small><%= lang === 'en' ? settings.siteNameEn : settings.siteName %></small></div>
+      </a>
+
+      <form class="search" id="searchForm" onsubmit="return doSearch(event)">
+        <input type="text" id="searchInput" placeholder="<%= t.searchPlaceholder %>" />
+        <button type="submit"><%= t.search %></button>
+      </form>
+
+      <div class="header-actions">
+        <a class="lang-toggle" href="<%= locals.pagePath || '/' %>?lang=<%= lang === 'en' ? 'zh' : 'en' %>"><%= t.language %></a>
+        <button class="btn-ghost" onclick="openLogin()">👤 <%= t.login %></button>
+      </div>
+    </div>
+
+    <nav class="nav" id="mainNav">
+      <a href="/?lang=<%= lang %>" class="active"><%= t.home %></a>
+      <a href="#hot"><%= t.hotProducts %></a>
+      <a href="#new"><%= t.newProducts %></a>
+      <a href="#promo"><%= t.promotions %></a>
+      <a href="#categories"><%= t.categories %></a>
+      <a href="/about?lang=<%= lang %>"><%= t.about %></a>
+    </nav>
+
+    <!-- 一级 tab：品牌 -->
+    <div class="brand-tabs" id="brandTabs">
+      <a class="brand-tab active" href="#brands" data-brand="" onclick="filterByBrand('', this)"><%= t.allBrands %></a>
+      <% brands.forEach(function(b){ %>
+        <a class="brand-tab" href="#hot" data-brand="<%= b.id %>" onclick="filterByBrand('<%= b.id %>', this)"><%= b.code %></a>
+      <% }) %>
+      <button class="brand-scroll brand-prev" aria-label="prev" onclick="scrollBrands(-1)">‹</button>
+      <button class="brand-scroll brand-next" aria-label="next" onclick="scrollBrands(1)">›</button>
+    </div>
+  </div>
+</header>

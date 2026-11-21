@@ -1,0 +1,60 @@
+<%- include('partials/head', { pageTitle: (lang === 'en' ? product.nameEn : product.name) + ' | ' + settings.shortName, pageDesc: (lang === 'en' ? product.descriptionEn : product.description) }) %>
+<body>
+<%- include('partials/header') %>
+<main class="container section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;">
+    <div>
+      <img src="<%= product.image %>" alt="<%= lang==='en'?product.nameEn:product.name %>" style="width:100%;border-radius:10px;background:#fafafa;padding:20px;" />
+    </div>
+    <div>
+      <h1 style="margin:0 0 8px;font-size:26px;"><%= lang==='en'?product.nameEn:product.name %></h1>
+      <p style="color:#888;">SKU: <%= product.sku %></p>
+      <div class="meta" style="display:flex;gap:10px;color:#888;margin:10px 0;">
+        <span class="stars" style="color:#ffb400;"><%= '★'.repeat(Math.round(product.rating)) %><%= '☆'.repeat(5-Math.round(product.rating)) %></span>
+        <span><%= product.rating %> · <%= product.reviews %> <%= t.reviews %></span>
+      </div>
+      <div class="price-row" style="display:flex;align-items:baseline;gap:12px;margin:14px 0;">
+        <% if (product.price > 0) { %>
+          <span class="price" style="color:var(--primary);font-weight:800;font-size:32px;"><%= settings.currencySymbol %><%= product.price %></span>
+          <% if (product.originalPrice > product.price) { %><span class="price-old" style="text-decoration:line-through;color:#999;"><%= settings.currencySymbol %><%= product.originalPrice %></span><% } %>
+        <% } else { %>
+          <span class="price" style="color:var(--primary);font-weight:800;font-size:28px;"><%= lang==='en'?'Inquire':'询价' %></span>
+        <% } %>
+      </div>
+      <p style="color:#555;line-height:1.8;"><%= lang==='en'?product.descriptionEn:product.description %></p>
+      <button class="inquire-btn" style="max-width:260px;margin-top:16px;" onclick="openInquiry('<%= (lang==='en'?product.nameEn:product.name).replace(/'/g,'') %>')"><%= product.price>0?t.addToCart:t.inquire %></button>
+    </div>
+  </div>
+
+  <% if (related && related.length) { %>
+    <div class="section-head" style="margin-top:30px;"><h2><%= lang==='en'?'Related Products':'相关推荐' %></h2></div>
+    <div class="product-grid">
+      <% related.forEach(function(p){ %>
+        <a class="product-card" href="/product/<%= p.id %>?lang=<%= lang %>" data-cat="<%= p.categoryId %>" data-search="<%= (p.name+' '+(p.nameEn||'')+' '+(p.sku||'')).toLowerCase() %>">
+          <div class="thumb"><img src="<%= p.image %>" alt="<%= lang==='en'?p.nameEn:p.name %>" loading="lazy" /></div>
+          <div class="body">
+            <div class="pname"><%= lang==='en'?p.nameEn:p.name %></div>
+            <div class="price-row"><span class="price"><%= p.price>0?settings.currencySymbol+p.price:(lang==='en'?'Inquire':'询价') %></span></div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+</main>
+<%- include('partials/footer') %>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "<%= (lang==='en'?product.nameEn:product.name).replace(/"/g,'') %>",
+  "image": "<%= product.image %>",
+  "description": "<%= (lang==='en'?product.descriptionEn:product.description).replace(/"/g,'') %>",
+  "sku": "<%= product.sku %>",
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "<%= product.rating %>", "reviewCount": "<%= product.reviews %>" },
+  "offers": { "@type": "Offer", "price": "<%= product.price %>", "priceCurrency": "<%= settings.currency %>" }
+}
+</script>
+<script src="/js/main.js"></script>
+</body>
+</html>

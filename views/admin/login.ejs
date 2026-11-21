@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>后台登录 · 长盈鑫科技</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    body { background: linear-gradient(135deg,#ff6a00,#ff4742); }
+    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-card { background: #fff; border-radius: 16px; padding: 36px 32px; width: 360px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+    .login-card h2 { margin: 0 0 4px; text-align: center; }
+    .login-card .sub { text-align: center; color: #999; margin-bottom: 22px; font-size: 13px; }
+    .login-card label { font-size: 13px; font-weight: 600; display: block; margin: 12px 0 6px; }
+    .login-card input { width: 100%; border: 1px solid #e0e0e0; border-radius: 8px; padding: 11px 12px; font-size: 15px; }
+    .login-card button { width: 100%; margin-top: 20px; background: #ff4742; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; }
+    .login-card .err { color: #d33; font-size: 13px; margin-top: 12px; text-align: center; min-height: 18px; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <form class="login-card" onsubmit="return doLogin(event)">
+      <h2>后台管理登录</h2>
+      <div class="sub">北京长盈鑫科技有限公司</div>
+      <label>用户名</label>
+      <input type="text" id="l_user" required autofocus />
+      <label>密码</label>
+      <input type="password" id="l_pass" required />
+      <button type="submit">登 录</button>
+      <div class="err" id="l_err"></div>
+      <p style="text-align:center;color:#aaa;font-size:12px;margin-top:16px;">默认账号 admin / admin123，请登录后修改</p>
+    </form>
+  </div>
+  <script>
+    function doLogin(e){
+      e.preventDefault();
+      const err = document.getElementById('l_err'); err.textContent='';
+      fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({username:document.getElementById('l_user').value,password:document.getElementById('l_pass').value})})
+        .then(r=>r.json().then(d=>({ok:r.ok,d})))
+        .then(({ok,d})=>{ if(ok) location.href='/admin'; else err.textContent=d.error||'登录失败'; });
+      return false;
+    }
+  </script>
+</body>
+</html>

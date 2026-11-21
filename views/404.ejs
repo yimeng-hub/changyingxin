@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 - <%= settings && settings.shortName || 'Page Not Found' %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<%- include('partials/header') %>
+<main class="container section" style="text-align:center;padding:80px 0;">
+  <h1 style="font-size:64px;margin:0;color:var(--primary);">404</h1>
+  <p style="color:#888;"><%= t && t.noResult || 'Page not found' %></p>
+  <a class="btn-ghost" href="/?lang=<%= lang %>">← <%= t && t.home || 'Home' %></a>
+</main>
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+</body>
+</html>
