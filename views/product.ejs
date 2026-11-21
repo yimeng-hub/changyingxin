@@ -39,7 +39,11 @@
       </ul>
 
       <div class="pdp-actions">
+        <% if (locals.staticMode) { %>
+        <a class="pdp-btn primary" href="mailto:<%= settings.contactEmail %>?subject=<%= encodeURIComponent((product.productCode || product.sku) + ' - ' + (lang==='en'?'Inquiry':'询价')) %>&body=<%= encodeURIComponent((lang==='en'?'Hello, I would like to inquire about: ':'您好，我想咨询以下型号：') + (product.productCode || product.sku) + '\n' + (lang==='en'?'Quantity: ':'数量：')) %>"><%= lang==='en'?'Inquire Now':'立即询价' %></a>
+        <% } else { %>
         <button class="pdp-btn primary" onclick="openInquiry('<%= (lang==='en'?product.nameEn:product.name).replace(/'/g,'') %>')"><%= lang==='en'?'Inquire Now':'立即询价' %></button>
+        <% } %>
         <a class="pdp-btn" href="tel:<%= settings.contactPhone %>">📞 <%= settings.contactPhone %></a>
         <a class="pdp-btn" href="mailto:<%= settings.contactEmail %>?subject=<%= encodeURIComponent((product.productCode||product.sku) + ' - Inquiry') %>">✉️ <%= settings.contactEmail %></a>
       </div>

@@ -92,6 +92,19 @@ node scripts/scrape-smc.js --pages=10   # 需要更多商品时调整页数
 > 内含：买服务器 / 开安全组 / 域名解析 / ICP 备案 / Node+PM2 / Nginx 反代 / HTTPS / 备份 / 更新发布，全流程可照抄。
 > 配套文件：`deploy/nginx.conf`、`deploy/ecosystem.config.js`、`deploy/deploy.sh`。
 
+### 纯静态版（无服务器 / 无后台）
+
+不需要服务器也能上线，适合先对外展示：
+
+```bash
+npm run build:static      # 输出 dist/（120+ 页，中英双语）
+```
+
+- 保留：首页 / 品牌筛选 / 商品分类 / 热门 / 新品 / 促销 / 56 个商品详情 / 中英文（`/` 与 `/en/`）/ sitemap / robots / canonical+hreflang / JSON-LD
+- 去掉：后台管理、用户登录、在线留言（询价改为 `tel:` / `mailto:` 直达）
+- 部署：OSS 静态托管 / EdgeOne Pages / Vercel 均可，链接是 `.html` 形式，**不需要任何 rewrite 规则**
+- 详细步骤：[`deploy/README-static.md`](deploy/README-static.md)
+
 本项目是标准 Node.js 应用，已内置数据 / 存储云抽象，任选其一即可上线：
 
 ### 方案 A：Docker Compose（推荐，自带云端数据库选项）

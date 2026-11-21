@@ -12,8 +12,8 @@
       </form>
 
       <div class="header-actions">
-        <a class="lang-toggle" href="<%= locals.pagePath || '/' %>?lang=<%= lang === 'en' ? 'zh' : 'en' %>"><%= t.language %></a>
-        <button class="btn-ghost" onclick="openLogin()">👤 <%= t.login %></button>
+        <a class="lang-toggle" href="<%= locals.staticMode ? locals.langSwitch : ((locals.pagePath || '/') + '?lang=' + (lang === 'en' ? 'zh' : 'en')) %>"><%= t.language %></a>
+        <% if (!locals.staticMode) { %><button class="btn-ghost" onclick="openLogin()">👤 <%= t.login %></button><% } %>
       </div>
     </div>
 

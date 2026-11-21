@@ -19,7 +19,11 @@
         <h1 id="heroTitle"><%= lang === 'en' ? slides[0].titleEn : slides[0].title %></h1>
         <p id="heroSub"><%= lang === 'en' ? slides[0].subtitleEn : slides[0].subtitle %></p>
         <div class="hero-cta">
+          <% if (locals.staticMode) { %>
+          <a class="btn-primary" href="mailto:<%= settings.contactEmail %>?subject=<%= encodeURIComponent(lang === 'en' ? 'Product Inquiry from tecshin.com' : '产品询价 - tecshin.com') %>"><%= lang === 'en' ? 'Get a Quote' : '立即询价' %></a>
+          <% } else { %>
           <button class="btn-primary" onclick="gotoContact()"><%= lang === 'en' ? 'Get a Quote' : '立即询价' %></button>
+          <% } %>
           <a class="btn-ghost" href="#categories"><%= lang === 'en' ? 'Browse Categories' : '浏览分类' %></a>
         </div>
       </div>
@@ -159,6 +163,24 @@
         <p>📞 <%= settings.contactPhone %></p>
         <p>📍 <%= lang === 'en' ? settings.addressEn : settings.address %></p>
       </div>
+      <% if (locals.staticMode) { %>
+      <div class="contact-form">
+        <p style="color:#555;line-height:1.9;margin:0 0 18px;">
+          <%= lang === 'en'
+            ? 'Tell us the model and quantity you need — our engineers will reply within one business day.'
+            : '告诉我们您需要的型号与数量，我们的工程师会尽快回复。' %>
+        </p>
+        <div class="pdp-actions" style="margin:0;">
+          <a class="pdp-btn primary" href="mailto:<%= settings.contactEmail %>?subject=<%= encodeURIComponent('Product Inquiry - tecshin.com') %>">✉️ <%= settings.contactEmail %></a>
+          <a class="pdp-btn" href="tel:<%= settings.contactPhone %>">📞 <%= settings.contactPhone %></a>
+        </div>
+        <p style="color:#999;font-size:13px;margin:16px 0 0;line-height:1.8;">
+          <%= lang === 'en'
+            ? 'Tip: open any product page and click "Inquire Now" to pre-fill the model in your email.'
+            : '提示：进入任意商品详情页点击「立即询价」，会自动把型号带入邮件。' %>
+        </p>
+      </div>
+      <% } else { %>
       <form class="contact-form" id="contactForm" onsubmit="return submitMessage(event)">
         <div class="form-row">
           <label><%= t.name %> *</label>
@@ -183,6 +205,7 @@
         <button class="submit-btn" type="submit" id="m_submit"><%= t.send %></button>
         <div class="form-msg" id="formMsg"></div>
       </form>
+      <% } %>
     </div>
   </section>
 
@@ -206,6 +229,7 @@
 <%- include('partials/footer') %>
 
 <!-- 登录弹窗 -->
+<% if (!locals.staticMode) { %>
 <div class="modal-mask" id="loginMask" onclick="if(event.target===this)closeLogin()">
   <div class="modal">
     <h3><%= t.login %> · <%= settings.shortName %></h3>
@@ -218,6 +242,7 @@
     <div class="modal-actions"><button class="link-btn" onclick="closeLogin()">✕</button></div>
   </div>
 </div>
+<% } %>
 
 <!-- 结构化数据：商品列表（SEO 富摘要） -->
 <script type="application/ld+json">

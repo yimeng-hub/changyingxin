@@ -17,7 +17,7 @@
         <h4><%= t.service %></h4>
         <a href="#contact"><%= t.contactUs %></a>
         <a href="#hot"><%= t.hotProducts %></a>
-        <a href="/admin"><%= lang === 'en' ? 'Admin' : '后台管理' %></a>
+        <% if (!locals.staticMode) { %><a href="/admin"><%= lang === 'en' ? 'Admin' : '后台管理' %></a><% } %>
       </div>
       <div>
         <h4><%= t.contactInfo %></h4>
