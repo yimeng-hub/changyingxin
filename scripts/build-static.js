@@ -58,11 +58,10 @@ function urlOf(lang, slug) {
   return isIndex ? `${SITE}/index.html` : `${SITE}/${slug}`;
 }
 
-/** 站内相对路径（用于语言切换，生产/本地都可用） */
+/** 站内相对路径（用于语言切换，生产/本地都可用；一律显式 .html，避免依赖子目录首页） */
 function relUrlOf(lang, slug) {
-  const isIndex = slug === 'index.html';
-  if (lang === 'en') return isIndex ? '/en/' : `/en/${slug}`;
-  return isIndex ? '/' : `/${slug}`;
+  if (lang === 'en') return `/en/${slug}`;
+  return `/${slug}`;
 }
 
 function pageModel(lang, slug, extra = {}) {
