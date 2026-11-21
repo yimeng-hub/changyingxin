@@ -1,4 +1,18 @@
 'use strict';
+// ---- 轻量 .env 加载（零依赖，必须在读取 process.env 之前执行）----
+(function loadEnv() {
+  const fs = require('fs');
+  const p = require('path');
+  const file = p.join(__dirname, '.env');
+  if (!fs.existsSync(file)) return;
+  fs.readFileSync(file, 'utf8').split(/\r?\n/).forEach((line) => {
+    const m = line.match(/^\s*([A-Za-z0-9_]+)\s*=\s*(.*?)\s*$/);
+    if (!m || line.trim().startsWith('#')) return;
+    if (process.env[m[1]] !== undefined) return;
+    process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+  });
+})();
+
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
@@ -43,6 +57,7 @@ app.use((req, res) => {
     settings: d.settings,
     categories: d.categories,
     brands: d.brands,
+    siteBase: (process.env.SITE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, ''),
     pagePath: req.originalUrl || '/',
   });
 });

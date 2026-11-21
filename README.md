@@ -88,6 +88,10 @@ node scripts/scrape-smc.js --pages=10   # 需要更多商品时调整页数
 
 ## 四、上线部署（一键）
 
+> **要部署到阿里云？** 直接看专版手册：[`deploy/README-aliyun.md`](deploy/README-aliyun.md)
+> 内含：买服务器 / 开安全组 / 域名解析 / ICP 备案 / Node+PM2 / Nginx 反代 / HTTPS / 备份 / 更新发布，全流程可照抄。
+> 配套文件：`deploy/nginx.conf`、`deploy/ecosystem.config.js`、`deploy/deploy.sh`。
+
 本项目是标准 Node.js 应用，已内置数据 / 存储云抽象，任选其一即可上线：
 
 ### 方案 A：Docker Compose（推荐，自带云端数据库选项）

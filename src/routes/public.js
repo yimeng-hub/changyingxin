@@ -16,8 +16,11 @@ function publicModel(req, extra = {}) {
   const lang = langOf(req);
   const t = dict[lang];
   const s = d.settings;
+  // 站点根地址：优先环境变量 SITE_URL（CDN/反代场景），否则按请求推导
+  const siteBase = (process.env.SITE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
   return {
     pagePath: req.path,
+    siteBase,
     lang,
     t,
     i18nDict: dict,
@@ -118,7 +121,7 @@ router.post('/api/messages', (req, res) => {
 
 // robots.txt
 router.get('/robots.txt', (req, res) => {
-  const base = `${req.protocol}://${req.get('host')}`;
+  const base = (process.env.SITE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
   res.type('text/plain').send(
     `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nSitemap: ${base}/sitemap.xml\n`
   );
@@ -126,7 +129,7 @@ router.get('/robots.txt', (req, res) => {
 
 // sitemap.xml（动态生成，利于 SEO 收录）
 router.get('/sitemap.xml', (req, res) => {
-  const base = `${req.protocol}://${req.get('host')}`;
+  const base = (process.env.SITE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
   const d = db.read();
   const urls = [];
   urls.push({ loc: `${base}/?lang=zh`, changefreq: 'daily', priority: '1.0' });
