@@ -147,7 +147,12 @@ router.get('/product/:id', (req, res) => {
   const d = db.read();
   const p = d.products.find((x) => x.id === req.params.id && x.active);
   if (!p) return res.status(404).render('404', publicModel(req));
-  const model = publicModel(req, { product: p, related: d.products.filter((x) => x.active && (x.brandId === p.brandId || x.categoryId === p.categoryId) && x.id !== p.id).slice(0, 4) });
+  // 相关商品：优先同品牌，不足再补同分类
+  const others = d.products.filter((x) => x.active && x.id !== p.id);
+  const sameBrand = others.filter((x) => p.brandId && x.brandId === p.brandId);
+  const sameCat = others.filter((x) => !sameBrand.includes(x) && x.categoryId === p.categoryId);
+  const related = sameBrand.concat(sameCat).slice(0, 4);
+  const model = publicModel(req, { product: p, related });
   res.render('product', model);
 });
 

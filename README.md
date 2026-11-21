@@ -43,6 +43,19 @@ npm start                  # 默认 http://localhost:3000
 - 前台首页：<http://localhost:3000/>
 - 后台管理：<http://localhost:3000/admin>　（默认账号 `admin` / `admin123`，**请登录后立即修改密码**）
 
+### 2.1 导入 SMC 商品（从 hhinte.com 分类页抓取）
+
+```bash
+npm run import:smc            # 默认抓取前 3 页（约 36 个 SKU），按型号幂等写入
+node scripts/scrape-smc.js --pages=10   # 需要更多商品时调整页数
+```
+
+- 抓取字段：标题、型号/产品编号、展示价、点击量、货期、主图（图片下载到 `public/uploads/products/`）
+- 价格按来源站**列表展示价**标注（原站会员价需登录，未做登录，故不做差价计算）
+- 页面表现：列表页与来源保持一致（图/标题/价格/点击量）；详情页补充品牌、产品编号、货期、含税说明、正品承诺与询价入口
+- 联系方式取站点设置中的 `contactPhone` / `contactEmail`，可在后台「站点设置」统一修改
+- 抓取结果快照见 `scripts/smc-products.json`，便于人工核对
+
 ---
 
 ## 三、目录结构

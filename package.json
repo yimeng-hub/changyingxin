@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "node server.js",
     "seed": "node src/seed.js",
-    "gen-placeholders": "node src/gen-placeholders.js"
+    "gen-placeholders": "node src/gen-placeholders.js",
+    "import:smc": "node scripts/scrape-smc.js --pages=3"
   },
   "engines": {
     "node": ">=18"

@@ -43,6 +43,8 @@ const SCHEMAS = {
     endpoint: 'products', title: '商品管理',
     fields: [
       { k: 'sku', l: 'SKU / 型号', hint: '例如 CYX-PLC-1200' },
+      { k: 'productCode', l: '产品编号', hint: '详情页展示，留空则用 SKU' },
+      { k: 'leadTime', l: '货期', hint: '例如：交期详询客服' },
       { k: 'name', l: '名称(中文)' }, { k: 'nameEn', l: '名称(英文)' },
       { k: 'categoryId', l: '所属产品类型', type: 'select', optionsKey: 'categories' },
       { k: 'brandId', l: '所属品牌', type: 'select', optionsKey: 'brands' },

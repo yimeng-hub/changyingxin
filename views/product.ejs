@@ -2,29 +2,78 @@
 <body>
 <%- include('partials/header') %>
 <main class="container section">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;">
-    <div>
-      <img src="<%= product.image %>" alt="<%= lang==='en'?product.nameEn:product.name %>" style="width:100%;border-radius:10px;background:#fafafa;padding:20px;" />
+  <nav class="crumb">
+    <a href="/?lang=<%= lang %>"><%= t.home %></a> <span>/</span>
+    <% var brand = (brands || []).find(function(b){ return b.id === product.brandId; }); %>
+    <% if (brand) { %><a href="/?lang=<%= lang %>#hot"><%= brand.code %></a> <span>/</span><% } %>
+    <em><%= product.productCode || product.sku %></em>
+  </nav>
+
+  <div class="pdp">
+    <div class="pdp-media">
+      <img src="<%= product.image %>" alt="<%= lang==='en'?product.nameEn:product.name %>" />
     </div>
-    <div>
-      <h1 style="margin:0 0 8px;font-size:26px;"><%= lang==='en'?product.nameEn:product.name %></h1>
-      <p style="color:#888;">SKU: <%= product.sku %></p>
-      <div class="meta" style="display:flex;gap:10px;color:#888;margin:10px 0;">
-        <span class="stars" style="color:#ffb400;"><%= '★'.repeat(Math.round(product.rating)) %><%= '☆'.repeat(5-Math.round(product.rating)) %></span>
-        <span><%= product.rating %> · <%= product.reviews %> <%= t.reviews %></span>
+
+    <div class="pdp-info">
+      <h1><%= lang==='en'?product.nameEn:product.name %></h1>
+
+      <div class="pdp-meta">
+        <% if (brand) { %><span class="pdp-chip"><%= brand.code %></span><% } %>
+        <span class="pdp-chip"><%= lang==='en'?'Model':'型号' %>: <%= product.productCode || product.sku %></span>
+        <% if (product.clicks) { %><span class="pdp-chip"><%= product.clicks.toLocaleString('en-US') %> <%= lang==='en'?'views':'次点击' %></span><% } %>
       </div>
-      <div class="price-row" style="display:flex;align-items:baseline;gap:12px;margin:14px 0;">
+
+      <div class="pdp-price">
         <% if (product.price > 0) { %>
-          <span class="price" style="color:var(--primary);font-weight:800;font-size:32px;"><%= settings.currencySymbol %><%= product.price %></span>
-          <% if (product.originalPrice > product.price) { %><span class="price-old" style="text-decoration:line-through;color:#999;"><%= settings.currencySymbol %><%= product.originalPrice %></span><% } %>
+          <span class="now"><i><%= product.currencySymbol || settings.currencySymbol %></i><%= product.price %></span>
+          <% if (product.originalPrice > product.price) { %><span class="old"><%= product.currencySymbol || settings.currencySymbol %><%= product.originalPrice %></span><% } %>
         <% } else { %>
-          <span class="price" style="color:var(--primary);font-weight:800;font-size:28px;"><%= lang==='en'?'Inquire':'询价' %></span>
+          <span class="now"><%= lang==='en'?'Inquire':'询价' %></span>
         <% } %>
       </div>
-      <p style="color:#555;line-height:1.8;"><%= lang==='en'?product.descriptionEn:product.description %></p>
-      <button class="inquire-btn" style="max-width:260px;margin-top:16px;" onclick="openInquiry('<%= (lang==='en'?product.nameEn:product.name).replace(/'/g,'') %>')"><%= product.price>0?t.addToCart:t.inquire %></button>
+
+      <ul class="pdp-promise">
+        <li><b>✔</b> <%= lang==='en'?'Genuine product — 10x compensation if fake':'原装正品，假一罚十' %></li>
+        <li><b>✔</b> <%= lang==='en'?'Tax included, invoice available':'含税，可开票' %></li>
+        <li><b>✔</b> <%= lang==='en'?'Lead time: ':'货期：' %><%= product.leadTime || (lang==='en'?'On request':'交期详询客服') %></li>
+      </ul>
+
+      <div class="pdp-actions">
+        <button class="pdp-btn primary" onclick="openInquiry('<%= (lang==='en'?product.nameEn:product.name).replace(/'/g,'') %>')"><%= lang==='en'?'Inquire Now':'立即询价' %></button>
+        <a class="pdp-btn" href="tel:<%= settings.contactPhone %>">📞 <%= settings.contactPhone %></a>
+        <a class="pdp-btn" href="mailto:<%= settings.contactEmail %>?subject=<%= encodeURIComponent((product.productCode||product.sku) + ' - Inquiry') %>">✉️ <%= settings.contactEmail %></a>
+      </div>
+
+      <p class="pdp-desc"><%= lang==='en'?product.descriptionEn:product.description %></p>
     </div>
   </div>
+
+  <!-- 产品信息 -->
+  <section class="pdp-block">
+    <h2><%= lang==='en'?'Product Details':'产品信息' %></h2>
+    <table class="pdp-table">
+      <tbody>
+        <% if (brand) { %>
+        <tr><th><%= lang==='en'?'Brand':'品牌' %></th><td><%= lang==='en'?brand.nameEn:brand.name %></td></tr>
+        <% } %>
+        <tr><th><%= lang==='en'?'Model / Part No.':'型号 / 产品编号' %></th><td><%= product.productCode || product.sku %></td></tr>
+        <tr><th><%= lang==='en'?'Price':'价格' %></th><td><%= product.currencySymbol || settings.currencySymbol %><%= product.price %> <span class="muted"><%= lang==='en'?'(tax included)':'(含税)' %></span></td></tr>
+        <tr><th><%= lang==='en'?'Lead Time':'货期' %></th><td><%= product.leadTime || (lang==='en'?'On request':'交期详询客服') %></td></tr>
+        <tr><th><%= lang==='en'?'Availability':'库存' %></th><td><%= lang==='en'?'In stock / on request — please confirm with sales':'现货 / 备货，具体请联系客服确认' %></td></tr>
+        <tr><th><%= lang==='en'?'Contact':'联系方式' %></th><td>TEL: <%= settings.contactPhone %> &nbsp;|&nbsp; Email: <%= settings.contactEmail %></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 商品说明 -->
+  <section class="pdp-block">
+    <h2><%= lang==='en'?'Description':'商品说明' %></h2>
+    <p class="pdp-text"><%= lang==='en'?product.descriptionEn:product.description %></p>
+    <ul class="pdp-notes">
+      <li><%= lang==='en'?'All products are sourced from authorized channels; please confirm model and quantity before ordering.':'所有商品均来自正规渠道，下单前请确认型号与数量。' %></li>
+      <li><%= lang==='en'?'Bulk orders and technical selection support are available — contact our engineers.':'支持批量采购与技术选型，欢迎联系我们的工程师。' %></li>
+    </ul>
+  </section>
 
   <% if (related && related.length) { %>
     <div class="section-head" style="margin-top:30px;"><h2><%= lang==='en'?'Related Products':'相关推荐' %></h2></div>
@@ -34,7 +83,7 @@
           <div class="thumb"><img src="<%= p.image %>" alt="<%= lang==='en'?p.nameEn:p.name %>" loading="lazy" /></div>
           <div class="body">
             <div class="pname"><%= lang==='en'?p.nameEn:p.name %></div>
-            <div class="price-row"><span class="price"><%= p.price>0?settings.currencySymbol+p.price:(lang==='en'?'Inquire':'询价') %></span></div>
+            <div class="price-row"><span class="price"><span class="cur"><%= p.currencySymbol || settings.currencySymbol %></span><%= p.price %></span></div>
           </div>
         </a>
       <% }) %>
@@ -50,9 +99,9 @@
   "name": "<%= (lang==='en'?product.nameEn:product.name).replace(/"/g,'') %>",
   "image": "<%= product.image %>",
   "description": "<%= (lang==='en'?product.descriptionEn:product.description).replace(/"/g,'') %>",
-  "sku": "<%= product.sku %>",
-  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "<%= product.rating %>", "reviewCount": "<%= product.reviews %>" },
-  "offers": { "@type": "Offer", "price": "<%= product.price %>", "priceCurrency": "<%= settings.currency %>" }
+  "sku": "<%= product.productCode || product.sku %>",
+  "brand": { "@type": "Brand", "name": "<%= brand ? brand.nameEn : 'SMC' %>" },
+  "offers": { "@type": "Offer", "price": "<%= product.price %>", "priceCurrency": "<%= product.currency || settings.currency %>", "availability": "https://schema.org/InStock" }
 }
 </script>
 <script src="/js/main.js"></script>

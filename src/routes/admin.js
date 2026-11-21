@@ -127,6 +127,8 @@ router.post('/api/products', requireAuth, single('image', 'products'), (req, res
   const item = {
     id: db.uid('prod'),
     sku: b.sku || '',
+    productCode: b.productCode || b.sku || '',
+    leadTime: b.leadTime || '',
     categoryId: b.categoryId || '',
     brandId: b.brandId || '',
     name: b.name || '',
@@ -156,10 +158,10 @@ router.put('/api/products/:id', requireAuth, single('image', 'products'), (req, 
   const b = req.body || {};
   const item = db.read().products.find((x) => x.id === req.params.id);
   if (!item) return res.status(404).json({ error: '未找到' });
-  ['sku', 'categoryId', 'brandId', 'name', 'nameEn', 'description', 'descriptionEn'].forEach((k) => {
+  ['sku', 'productCode', 'leadTime', 'categoryId', 'brandId', 'name', 'nameEn', 'description', 'descriptionEn'].forEach((k) => {
     if (b[k] !== undefined) item[k] = b[k];
   });
-  ['price', 'originalPrice', 'rating', 'reviews', 'stock'].forEach((k) => {
+  ['price', 'originalPrice', 'rating', 'reviews', 'stock', 'clicks'].forEach((k) => {
     if (b[k] !== undefined) item[k] = Number(b[k]) || 0;
   });
   if (b.tags !== undefined) item.tags = String(b.tags).split(',').map((s) => s.trim()).filter(Boolean);
